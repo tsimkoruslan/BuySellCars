@@ -5,7 +5,6 @@ export class UserDetailsResDto {
   id: string;
   userName: string;
   email: string;
-  password: string;
   role: ERoleBasic;
   typeAccount: ETypeAccount;
   createdAt: Date;

@@ -13,13 +13,6 @@ export class UserCreateReqDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
-  // @IsEnum(ETypeAccount)
-  // typeAccount?: ETypeAccount.BASIC;
-
   @IsEnum(ERoleBasic)
   role: ERoleBasic;
 }
