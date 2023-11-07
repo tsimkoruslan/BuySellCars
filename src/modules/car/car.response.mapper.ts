@@ -1,4 +1,3 @@
-import { CarEntity } from '../../database/car.entity';
 import { CarDetailsResDto } from './dto/response/car-details-res.dto';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 
@@ -16,6 +15,7 @@ export class CarResponseMapper {
       region: data.region,
       model: data.model,
       brand: data.brand,
+      isActive: data.isActive,
       description: data.description,
     };
   }

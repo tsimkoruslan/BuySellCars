@@ -2,6 +2,7 @@ import { EBrand } from '../../enum/brand.enum';
 import { EModel } from '../../enum/model.enum';
 import { ECurrency } from '../../enum/currency.enum';
 import { EUkraineRegion } from '../../enum/region.enum';
+import { EIsActive } from '../../enum/isActive.enum';
 export class CarDetailsResDto {
   id: string;
   year: number;
@@ -12,4 +13,5 @@ export class CarDetailsResDto {
   description: string;
   region: EUkraineRegion;
   viewCount?: number;
+  isActive: EIsActive;
 }

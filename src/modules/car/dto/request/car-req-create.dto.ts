@@ -12,6 +12,7 @@ import { EModel } from '../../enum/model.enum';
 import { Transform } from 'class-transformer';
 import { ECurrency } from '../../enum/currency.enum';
 import { EUkraineRegion } from '../../enum/region.enum';
+import { EIsActive } from '../../enum/isActive.enum';
 
 export class CarCreateReqDto {
   @IsNumber()
@@ -43,4 +44,7 @@ export class CarCreateReqDto {
   @MinLength(4)
   @MaxLength(30)
   region: EUkraineRegion;
+
+  @IsEnum(EIsActive)
+  isActive: EIsActive;
 }

@@ -8,6 +8,7 @@ import { ECurrency } from '../modules/car/enum/currency.enum';
 import { EUkraineRegion } from '../modules/car/enum/region.enum';
 import { UserEntity } from './user.entity';
 import { JoinColumn } from 'typeorm/browser';
+import { EIsActive } from "../modules/car/enum/isActive.enum";
 
 @Entity('cars')
 export class CarEntity extends CreatedUpdatedModel {
@@ -39,6 +40,9 @@ export class CarEntity extends CreatedUpdatedModel {
 
   @Column({ type: 'int', default: 0 })
   viewCount: number;
+
+  @Column({ enum: EIsActive, default: EIsActive.EXPECTATION })
+  isActive: EIsActive;
 
   @ManyToOne(() => UserEntity, (entity) => entity.cars)
   user: UserEntity;
