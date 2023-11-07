@@ -10,7 +10,8 @@ import {
 import { EBrand } from '../../enum/brand.enum';
 import { EModel } from '../../enum/model.enum';
 import { Transform } from 'class-transformer';
-import { ECurrency } from "../../enum/currency.enum";
+import { ECurrency } from '../../enum/currency.enum';
+import { EUkraineRegion } from '../../enum/region.enum';
 
 export class CarCreateReqDto {
   @IsNumber()
@@ -25,7 +26,6 @@ export class CarCreateReqDto {
   @IsEnum(EBrand)
   brand: EBrand;
 
-  @Transform(({ value }) => value.trim().toUpperCase())
   @IsEnum(ECurrency)
   currency: ECurrency;
 
@@ -37,4 +37,10 @@ export class CarCreateReqDto {
 
   @IsString()
   description: string;
+
+  @Transform(({ value }) => value.trim())
+  @IsEnum(EUkraineRegion)
+  @MinLength(4)
+  @MaxLength(30)
+  region: EUkraineRegion;
 }

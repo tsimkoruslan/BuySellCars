@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';
 import { UserDetailsResDto } from './dto/response/user-details-res.dto';
 import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
+import { UserResponseMapper } from './user.response.mapper';
 
 @ApiTags('Users')
 @Controller('user')
@@ -28,7 +29,8 @@ export class UserController {
   @ApiOperation({ summary: 'Create new user' })
   @Post()
   async createUser(@Body() body: UserCreateReqDto): Promise<UserDetailsResDto> {
-    return await this.userService.createUser(body);
+    const result = await this.userService.createUser(body);
+    return UserResponseMapper.toDetailsDto(result);
   }
 
   @ApiOperation({ summary: 'Update user' })

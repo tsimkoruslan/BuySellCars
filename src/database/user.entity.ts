@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CreatedUpdatedModel } from './common/created-updated.model';
-import { ERoleBasic } from '../user/enum/role.enum';
-import { ETypeAccount } from '../user/enum/type-account.enum';
+import { ERoleBasic } from '../modules/user/enum/role.enum';
+import { ETypeAccount } from '../modules/user/enum/type-account.enum';
+import { CarEntity } from './car.entity';
 
 @Entity('user')
 export class UserEntity extends CreatedUpdatedModel {
@@ -20,4 +21,7 @@ export class UserEntity extends CreatedUpdatedModel {
 
   @Column({ type: 'enum', enum: ETypeAccount, default: ETypeAccount.BASIC })
   typeAccount: ETypeAccount;
+
+  @OneToMany(() => CarEntity, (entity) => entity.user)
+  cars: CarEntity[];
 }
