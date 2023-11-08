@@ -12,7 +12,10 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';
-import { UserDetailsResDto } from './dto/response/user-details-res.dto';
+import {
+  UserDetailsResDto,
+  UserListItemResponseDto,
+} from './dto/response/user-details-res.dto';
 import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
 import { UserResponseMapper } from './user.response.mapper';
 
@@ -23,8 +26,9 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get list of users' })
   @Get()
-  async getAllUsers(): Promise<UserDetailsResDto[]> {
-    return await this.userService.getAllUsers();
+  async getAllUsers(): Promise<UserListItemResponseDto[]> {
+    const result = await this.userService.getAllUsers();
+    return UserResponseMapper.toListDto(result);
   }
   @ApiOperation({ summary: 'Create new user' })
   @Post()

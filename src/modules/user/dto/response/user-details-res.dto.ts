@@ -12,3 +12,11 @@ export class UserDetailsResDto {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export class UserListItemResponseDto {
+  id: string;
+  userName: string;
+  email: string;
+  role: ERoleBasic;
+  typeAccount: ETypeAccount;
+}

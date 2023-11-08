@@ -15,6 +15,7 @@ export class UserService {
 
   async getAllUsers(): Promise<UserDetailsResDto[]> {
     return await this.userRepository.find();
+    // { relations: { cars: true } }
   }
   async createUser(dto: UserCreateReqDto): Promise<UserDetailsResDto> {
     const user = await this.userRepository.findOneBy({ email: dto.email });
