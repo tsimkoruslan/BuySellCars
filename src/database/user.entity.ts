@@ -22,6 +22,9 @@ export class UserEntity extends CreatedUpdatedModel {
   @Column({ type: 'enum', enum: ETypeAccount, default: ETypeAccount.BASIC })
   typeAccount: ETypeAccount;
 
+  @Column({ type: 'text' })
+  password: string;
+
   @OneToMany(() => CarEntity, (entity) => entity.user)
   cars: CarEntity[];
 }

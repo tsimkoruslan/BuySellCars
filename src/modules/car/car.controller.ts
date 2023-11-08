@@ -7,16 +7,18 @@ import {
   HttpStatus,
   Param,
   Post,
-  Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CarService } from './car.service';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarDetailsResDto } from './dto/response/car-details-res.dto';
 import { CarResponseMapper } from './car.response.mapper';
-import { use } from "passport";
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Cars')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}

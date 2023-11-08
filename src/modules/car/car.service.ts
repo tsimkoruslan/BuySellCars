@@ -1,8 +1,8 @@
 import {
   BadRequestException,
-  Injectable, Logger,
-  UnprocessableEntityException
-} from "@nestjs/common";
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CarRepository } from './car.repository';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarDetailsResDto } from './dto/response/car-details-res.dto';

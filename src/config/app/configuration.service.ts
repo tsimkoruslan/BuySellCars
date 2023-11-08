@@ -13,4 +13,8 @@ export class AppConfigService {
   get port(): number {
     return Number(this.appConfiguration.port);
   }
+
+  get salt(): number {
+    return Number(this.appConfiguration.salt);
+  }
 }

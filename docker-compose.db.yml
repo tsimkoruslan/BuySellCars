@@ -11,5 +11,15 @@ services:
       POSTGRES_DB: buySellCars
     volumes:
       - buySellCars:/var/lib/postgresql/buySellCars
+
+  buy-sell-car-redis:
+    image: redis
+    container_name: buySellCar-redis
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+
+
 volumes:
   buySellCars:
+  buy-sell-car-redis:

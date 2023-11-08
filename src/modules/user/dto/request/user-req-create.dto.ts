@@ -26,4 +26,9 @@ export class UserCreateReqDto {
   @Transform(({ value }) => value.trim().toLowerCase())
   @IsEnum(ERoleBasic)
   role: ERoleBasic;
+
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

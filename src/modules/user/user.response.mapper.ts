@@ -5,12 +5,13 @@ import {
 import { CarResponseMapper } from '../car/car.response.mapper';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';
 import { UserEntity } from '../../database/user.entity';
-import { ERoleBasic } from './enum/role.enum';
-import { ETypeAccount } from './enum/type-account.enum';
-import { CarCreateReqDto } from '../car/dto/request/car-req-create.dto';
-import { CarDetailsResDto } from '../car/dto/response/car-details-res.dto';
 
 export class UserResponseMapper {
+  static toDetailsRegisterDto(data: UserCreateReqDto) {
+    return {
+      email: data.email,
+    };
+  }
   static toDetailsListDto(data: UserCreateReqDto[]): UserDetailsResDto[] {
     return data.map(this.toDetailsDto);
   }
@@ -22,6 +23,7 @@ export class UserResponseMapper {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       typeAccount: data.typeAccount,
+      password: data.password,
       role: data.role,
       cars: data.cars ? CarResponseMapper.toDetailsListDto(data.cars) : null,
     };
@@ -34,6 +36,7 @@ export class UserResponseMapper {
       email: data.email,
       role: data.role,
       typeAccount: data.typeAccount,
+      password: data.password,
     };
   }
 

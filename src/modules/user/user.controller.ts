@@ -8,8 +8,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';
 import {
@@ -18,8 +19,11 @@ import {
 } from './dto/response/user-details-res.dto';
 import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
 import { UserResponseMapper } from './user.response.mapper';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Users')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -30,6 +34,8 @@ export class UserController {
     const result = await this.userService.getAllUsers();
     return UserResponseMapper.toListDto(result);
   }
+
+  //admin
   @ApiOperation({ summary: 'Create new user' })
   @Post()
   async createUser(@Body() body: UserCreateReqDto): Promise<UserDetailsResDto> {

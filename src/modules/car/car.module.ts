@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarEntity } from '../../database/car.entity';
 import { UserModule } from '../user/user.module';
 import { UserRepository } from '../user/user.repository';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CarEntity]), UserModule],
+  imports: [TypeOrmModule.forFeature([CarEntity]), UserModule, AuthModule],
   controllers: [CarController],
   providers: [CarService, CarRepository, UserRepository],
 })
