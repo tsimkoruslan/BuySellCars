@@ -15,7 +15,6 @@ export class UserService {
 
   async getAllUsers(): Promise<UserDetailsResDto[]> {
     return await this.userRepository.find();
-    // { relations: { cars: true } }
   }
   async createUser(dto: UserCreateReqDto): Promise<UserDetailsResDto> {
     const user = await this.userRepository.findOneBy({ email: dto.email });
@@ -32,6 +31,14 @@ export class UserService {
     const entity = await this.findUserByIdOrException(userId);
     this.userRepository.merge(entity, dto);
     return await this.userRepository.save(entity);
+  }
+
+  public async getUserById(userId: string): Promise<UserEntity> {
+    await this.findUserByIdOrException(userId);
+    return await this.userRepository.findOne({
+      where: { id: userId },
+      relations: { cars: true },
+    });
   }
 
   private async findUserByIdOrException(userId: string): Promise<UserEntity> {

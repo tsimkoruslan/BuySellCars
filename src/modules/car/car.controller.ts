@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -15,6 +16,8 @@ import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarDetailsResDto } from './dto/response/car-details-res.dto';
 import { CarResponseMapper } from './car.response.mapper';
 import { AuthGuard } from '@nestjs/passport';
+import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
+import { BadWordsValidation } from "../auth/guard/bad-words-validation.guard";
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -37,12 +40,23 @@ export class CarController {
     return CarResponseMapper.toDetailsDto(result);
   }
   @ApiOperation({ summary: 'Create new car' })
+  @UseGuards(BadWordsValidation)
   @Post(':userId')
   async createCar(
     @Body() body: CarCreateReqDto,
     @Param('userId') userId: string,
   ): Promise<CarDetailsResDto> {
     const result = await this.carService.createCar(body, userId);
+    return CarResponseMapper.toDetailsDto(result);
+  }
+
+  @ApiOperation({ summary: 'Update car by id' })
+  @Put(':carId')
+  async updateCar(
+    @Param('carId') carId: string,
+    @Body() body: CarReqUpdateDto,
+  ): Promise<CarDetailsResDto> {
+    const result = await this.carService.updateCar(carId, body);
     return CarResponseMapper.toDetailsDto(result);
   }
 

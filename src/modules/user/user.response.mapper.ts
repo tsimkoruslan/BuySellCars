@@ -12,7 +12,7 @@ export class UserResponseMapper {
       email: data.email,
     };
   }
-  static toDetailsListDto(data: UserCreateReqDto[]): UserDetailsResDto[] {
+  static toDetailsListDto(data: UserDetailsResDto[]): UserDetailsResDto[] {
     return data.map(this.toDetailsDto);
   }
   static toDetailsDto(data: UserDetailsResDto): UserDetailsResDto {
@@ -23,7 +23,6 @@ export class UserResponseMapper {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       typeAccount: data.typeAccount,
-      password: data.password,
       role: data.role,
       cars: data.cars ? CarResponseMapper.toDetailsListDto(data.cars) : null,
     };
@@ -36,7 +35,6 @@ export class UserResponseMapper {
       email: data.email,
       role: data.role,
       typeAccount: data.typeAccount,
-      password: data.password,
     };
   }
 

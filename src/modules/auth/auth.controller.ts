@@ -1,9 +1,20 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginReqDto } from './dto/request/login-req.dto';
 import { LoginResDto } from './dto/response/login-res.dto';
 import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { LogoutGuard } from './guard/logout.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,5 +30,14 @@ export class AuthController {
   @Post('login')
   async login(@Body() body: LoginReqDto): Promise<LoginResDto> {
     return await this.authService.login(body);
+  }
+
+  @UseGuards(AuthGuard(), LogoutGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Logout' })
+  @Delete('logout')
+  async logout(): Promise<void> {
+    throw new HttpException('User logout', HttpStatus.OK);
   }
 }

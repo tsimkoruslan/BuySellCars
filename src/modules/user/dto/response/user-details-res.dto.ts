@@ -11,7 +11,6 @@ export class UserDetailsResDto {
   cars?: CarDetailsResDto[];
   createdAt: Date;
   updatedAt: Date;
-  password: string;
 }
 
 export class UserListItemResponseDto {
@@ -20,5 +19,4 @@ export class UserListItemResponseDto {
   email: string;
   role: ERoleBasic;
   typeAccount: ETypeAccount;
-  password: string;
 }

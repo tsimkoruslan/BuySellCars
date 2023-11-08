@@ -49,7 +49,18 @@ export class UserController {
     @Param('userId') userId: string,
     @Body() body: UserUpdateReqDto,
   ): Promise<UserDetailsResDto> {
-    return await this.userService.updateUser(userId, body);
+    const result = await this.userService.updateUser(userId, body);
+    return UserResponseMapper.toDetailsDto(result);
+  }
+
+  @ApiOperation({ summary: 'Get user by id' })
+  @UseGuards(AuthGuard())
+  @Get(':userId')
+  async getUserById(
+    @Param('userId') userId: string,
+  ): Promise<UserDetailsResDto> {
+    const result = await this.userService.getUserById(userId);
+    return UserResponseMapper.toDetailsDto(result);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

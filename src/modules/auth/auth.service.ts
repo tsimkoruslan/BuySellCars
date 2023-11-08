@@ -15,8 +15,6 @@ import { InjectRedisClient, RedisClient } from '@webeleon/nestjs-redis';
 import { LoginReqDto } from './dto/request/login-req.dto';
 import { LoginResDto } from './dto/response/login-res.dto';
 import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
-import { UserDetailsResDto } from '../user/dto/response/user-details-res.dto';
-import { UserResponseMapper } from '../user/user.response.mapper';
 
 @Injectable()
 export class AuthService {
