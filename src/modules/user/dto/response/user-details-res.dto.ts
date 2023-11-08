@@ -11,6 +11,7 @@ export class UserDetailsResDto {
   cars?: CarDetailsResDto[];
   createdAt: Date;
   updatedAt: Date;
+  banned: boolean;
 }
 
 export class UserListItemResponseDto {
@@ -19,4 +20,5 @@ export class UserListItemResponseDto {
   email: string;
   role: ERoleBasic;
   typeAccount: ETypeAccount;
+  banned: boolean;
 }

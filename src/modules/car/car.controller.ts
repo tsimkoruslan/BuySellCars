@@ -17,11 +17,15 @@ import { CarDetailsResDto } from './dto/response/car-details-res.dto';
 import { CarResponseMapper } from './car.response.mapper';
 import { AuthGuard } from '@nestjs/passport';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
-import { BadWordsValidation } from "../auth/guard/bad-words-validation.guard";
+import { BadWordsValidation } from '../auth/guard/bad-words-validation.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
+import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { ERoleBasic } from '../user/enum/role.enum';
 
 @ApiTags('Cars')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RoleGuard)
+@RoleDecorator(ERoleBasic.SELLER)
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}

@@ -20,15 +20,19 @@ import {
 import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
 import { UserResponseMapper } from './user.response.mapper';
 import { AuthGuard } from '@nestjs/passport';
+import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { ERoleBasic } from './enum/role.enum';
+import { RoleGuard } from '../../common/guards/role.guard';
 
 @ApiTags('Users')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RoleGuard)
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get list of users' })
+  @RoleDecorator(ERoleBasic.BUYER, ERoleBasic.SELLER)
   @Get()
   async getAllUsers(): Promise<UserListItemResponseDto[]> {
     const result = await this.userService.getAllUsers();
@@ -43,6 +47,7 @@ export class UserController {
     return UserResponseMapper.toDetailsDto(result);
   }
 
+  @RoleDecorator(ERoleBasic.BUYER, ERoleBasic.SELLER)
   @ApiOperation({ summary: 'Update user' })
   @Patch(':userId')
   async updateUser(
@@ -52,7 +57,7 @@ export class UserController {
     const result = await this.userService.updateUser(userId, body);
     return UserResponseMapper.toDetailsDto(result);
   }
-
+  @RoleDecorator(ERoleBasic.BUYER, ERoleBasic.SELLER)
   @ApiOperation({ summary: 'Get user by id' })
   @UseGuards(AuthGuard())
   @Get(':userId')
@@ -62,7 +67,6 @@ export class UserController {
     const result = await this.userService.getUserById(userId);
     return UserResponseMapper.toDetailsDto(result);
   }
-
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete user by id' })
   @Delete(':userId')

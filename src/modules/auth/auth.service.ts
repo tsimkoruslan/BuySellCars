@@ -26,9 +26,11 @@ export class AuthService {
   ) {}
 
   async findUserOrException(data: any): Promise<UserEntity> {
+    console.log(data);
     const user = await this.userRepository.findOneBy({
       id: data.id,
     });
+    console.log(user);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -74,7 +76,7 @@ export class AuthService {
       role: user.role,
     });
 
-    await this.redisClient.setEx(token, 10000, token);
+    await this.redisClient.setEx(token, 50000, token);
 
     return { token };
   }

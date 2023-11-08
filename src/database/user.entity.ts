@@ -25,6 +25,9 @@ export class UserEntity extends CreatedUpdatedModel {
   @Column({ type: 'text' })
   password: string;
 
+  @Column({ type: 'boolean', default: false })
+  banned: boolean;
+
   @OneToMany(() => CarEntity, (entity) => entity.user)
   cars: CarEntity[];
 }
