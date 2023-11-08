@@ -6,15 +6,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRedisClient, RedisClient } from '@webeleon/nestjs-redis';
 import * as bcrypt from 'bcrypt';
 
 import { UserEntity } from '../../database/user.entity';
+import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
 import { UserRepository } from '../user/user.repository';
 import { UserService } from '../user/user.service';
-import { InjectRedisClient, RedisClient } from '@webeleon/nestjs-redis';
 import { LoginReqDto } from './dto/request/login-req.dto';
 import { LoginResDto } from './dto/response/login-res.dto';
-import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +26,6 @@ export class AuthService {
   ) {}
 
   async findUserOrException(data: any): Promise<UserEntity> {
-    console.log(data);
     const user = await this.userRepository.findOneBy({
       id: data.id,
     });

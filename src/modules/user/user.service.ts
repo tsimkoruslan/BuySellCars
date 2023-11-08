@@ -3,11 +3,12 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { UserRepository } from './user.repository';
-import { UserCreateReqDto } from './dto/request/user-req-create.dto';
-import { UserDetailsResDto } from './dto/response/user-details-res.dto';
-import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
+
 import { UserEntity } from '../../database/user.entity';
+import { UserCreateReqDto } from './dto/request/user-req-create.dto';
+import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
+import { UserDetailsResDto } from './dto/response/user-details-res.dto';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,7 @@ export class UserService {
     if (user) {
       throw new BadRequestException('User already exist');
     }
-    return this.userRepository.save(this.userRepository.create(dto));
+    return await this.userRepository.save(this.userRepository.create(dto));
   }
 
   async updateUser(
