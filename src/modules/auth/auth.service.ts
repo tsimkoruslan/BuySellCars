@@ -29,7 +29,6 @@ export class AuthService {
     const user = await this.userRepository.findOneBy({
       id: data.id,
     });
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException();
     }

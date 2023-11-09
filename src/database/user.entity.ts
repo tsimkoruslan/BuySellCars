@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { CreatedUpdatedModel } from './common/created-updated.model';
-import { ERoleBasic } from '../modules/user/enum/role.enum';
+import { ERole } from '../common/enum/role.enum';
 import { ETypeAccount } from '../modules/user/enum/type-account.enum';
 import { CarEntity } from './car.entity';
+import { CreatedUpdatedModel } from './common/created-updated.model';
 
 @Entity('user')
 export class UserEntity extends CreatedUpdatedModel {
@@ -16,8 +16,8 @@ export class UserEntity extends CreatedUpdatedModel {
   @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column({ type: 'enum', enum: ERoleBasic })
-  role: ERoleBasic;
+  @Column({ type: 'enum', enum: ERole })
+  role: ERole;
 
   @Column({ type: 'enum', enum: ETypeAccount, default: ETypeAccount.BASIC })
   typeAccount: ETypeAccount;
@@ -26,7 +26,7 @@ export class UserEntity extends CreatedUpdatedModel {
   password: string;
 
   @Column({ type: 'boolean', default: false })
-  banned: boolean;
+  block: boolean;
 
   @OneToMany(() => CarEntity, (entity) => entity.user)
   cars: CarEntity[];

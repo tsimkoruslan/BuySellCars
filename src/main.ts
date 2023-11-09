@@ -20,7 +20,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('buySellCars')
-    .setDescription('The cats API description')
+    .setDescription('Platform for selling and buying cars 🏎')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

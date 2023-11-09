@@ -4,8 +4,9 @@ import {
   ExecutionContext,
   Injectable,
 } from '@nestjs/common';
+
 import { badWords } from '../../../common/constants/bad-words';
-import { EIsActive } from '../../car/enum/isActive.enum';
+import { EIsActive } from '../enum/isActive.enum';
 
 @Injectable()
 export class BadWordsValidation implements CanActivate {

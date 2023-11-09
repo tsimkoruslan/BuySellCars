@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { CarController } from './car.controller';
-import { CarService } from './car.service';
-import { CarRepository } from './car.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { CarEntity } from '../../database/car.entity';
+import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
 import { UserRepository } from '../user/user.repository';
-import { AuthModule } from '../auth/auth.module';
+import { CarController } from './car.controller';
+import { CarRepository } from './car.repository';
+import { CarService } from './car.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CarEntity]), UserModule, AuthModule],

@@ -1,24 +1,24 @@
-import { ERoleBasic } from '../../enum/role.enum';
-import { ETypeAccount } from '../../enum/type-account.enum';
+import { ERole } from '../../../../common/enum/role.enum';
 import { CarDetailsResDto } from '../../../car/dto/response/car-details-res.dto';
+import { ETypeAccount } from '../../enum/type-account.enum';
 
 export class UserDetailsResDto {
   id: string;
   userName: string;
   email: string;
-  role: ERoleBasic;
+  role: ERole;
   typeAccount: ETypeAccount;
   cars?: CarDetailsResDto[];
   createdAt: Date;
   updatedAt: Date;
-  banned: boolean;
+  block: boolean;
 }
 
 export class UserListItemResponseDto {
   id: string;
   userName: string;
   email: string;
-  role: ERoleBasic;
+  role: ERole;
   typeAccount: ETypeAccount;
-  banned: boolean;
+  block: boolean;
 }

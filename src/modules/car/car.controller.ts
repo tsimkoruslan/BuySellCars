@@ -10,39 +10,28 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { BlockGuard } from '../../common/guards/banned.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
+import { CarResponseMapper } from './car.response.mapper';
 import { CarService } from './car.service';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
-import { CarDetailsResDto } from './dto/response/car-details-res.dto';
-import { CarResponseMapper } from './car.response.mapper';
-import { AuthGuard } from '@nestjs/passport';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
-import { BadWordsValidation } from '../auth/guard/bad-words-validation.guard';
-import { RoleGuard } from '../../common/guards/role.guard';
-import { RoleDecorator } from '../../common/decorators/role.decorator';
-import { ERoleBasic } from '../user/enum/role.enum';
+import { CarDetailsResDto } from './dto/response/car-details-res.dto';
+import { BadWordsValidation } from './guard/bad-words-validation.guard';
+import { ERole } from "../../common/enum/role.enum";
 
 @ApiTags('Cars')
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard)
-@RoleDecorator(ERoleBasic.SELLER)
+@UseGuards(AuthGuard(), RoleGuard, BlockGuard)
+@RoleDecorator(ERole.SELLER)
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @ApiOperation({ summary: 'Get list of cars' })
-  @Get()
-  async getAllCars(): Promise<CarDetailsResDto[]> {
-    const result = await this.carService.getAllCars();
-    return CarResponseMapper.toDetailsListDto(result);
-  }
-
-  @ApiOperation({ summary: 'Get car by id' })
-  @Get(':carId')
-  async getCarById(@Param('carId') carId: string): Promise<CarDetailsResDto> {
-    const result = await this.carService.getCarById(carId);
-    return CarResponseMapper.toDetailsDto(result);
-  }
   @ApiOperation({ summary: 'Create new car' })
   @UseGuards(BadWordsValidation)
   @Post(':userId')
@@ -51,6 +40,26 @@ export class CarController {
     @Param('userId') userId: string,
   ): Promise<CarDetailsResDto> {
     const result = await this.carService.createCar(body, userId);
+    return CarResponseMapper.toDetailsDto(result);
+  }
+
+  @RoleDecorator(ERole.BUYER)
+  @ApiOperation({
+    summary: 'Get list of cars / also available for the BUYER role',
+  })
+  @Get()
+  async getAllCars(): Promise<CarDetailsResDto[]> {
+    const result = await this.carService.getAllCars();
+    return CarResponseMapper.toDetailsListDto(result);
+  }
+
+  @RoleDecorator(ERole.BUYER)
+  @ApiOperation({
+    summary: 'Get car by id / also available for the BUYER role',
+  })
+  @Get(':carId')
+  async getCarById(@Param('carId') carId: string): Promise<CarDetailsResDto> {
+    const result = await this.carService.getCarById(carId);
     return CarResponseMapper.toDetailsDto(result);
   }
 

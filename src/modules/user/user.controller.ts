@@ -7,47 +7,38 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { UserCreateReqDto } from './dto/request/user-req-create.dto';
+
+import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { ERole } from '../../common/enum/role.enum';
+import { BlockGuard } from '../../common/guards/banned.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
+import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
 import {
   UserDetailsResDto,
   UserListItemResponseDto,
 } from './dto/response/user-details-res.dto';
-import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
 import { UserResponseMapper } from './user.response.mapper';
-import { AuthGuard } from '@nestjs/passport';
-import { RoleDecorator } from '../../common/decorators/role.decorator';
-import { ERoleBasic } from './enum/role.enum';
-import { RoleGuard } from '../../common/guards/role.guard';
+import { UserService } from './user.service';
 
-@ApiTags('Users')
-@UseGuards(AuthGuard(), RoleGuard)
 @ApiBearerAuth()
+@ApiTags('Users')
+@UseGuards(AuthGuard(), RoleGuard, BlockGuard)
+@RoleDecorator(ERole.BUYER, ERole.SELLER)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get list of users' })
-  @RoleDecorator(ERoleBasic.BUYER, ERoleBasic.SELLER)
   @Get()
   async getAllUsers(): Promise<UserListItemResponseDto[]> {
     const result = await this.userService.getAllUsers();
     return UserResponseMapper.toListDto(result);
   }
 
-  //admin
-  @ApiOperation({ summary: 'Create new user' })
-  @Post()
-  async createUser(@Body() body: UserCreateReqDto): Promise<UserDetailsResDto> {
-    const result = await this.userService.createUser(body);
-    return UserResponseMapper.toDetailsDto(result);
-  }
-
-  @RoleDecorator(ERoleBasic.BUYER, ERoleBasic.SELLER)
   @ApiOperation({ summary: 'Update user' })
   @Patch(':userId')
   async updateUser(
@@ -57,9 +48,7 @@ export class UserController {
     const result = await this.userService.updateUser(userId, body);
     return UserResponseMapper.toDetailsDto(result);
   }
-  @RoleDecorator(ERoleBasic.BUYER, ERoleBasic.SELLER)
   @ApiOperation({ summary: 'Get user by id' })
-  @UseGuards(AuthGuard())
   @Get(':userId')
   async getUserById(
     @Param('userId') userId: string,

@@ -23,7 +23,7 @@ export class UserResponseMapper {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       typeAccount: data.typeAccount,
-      banned: data.banned,
+      block: data.block,
       role: data.role,
       cars: data.cars ? CarResponseMapper.toDetailsListDto(data.cars) : null,
     };
@@ -35,7 +35,7 @@ export class UserResponseMapper {
       userName: data.userName,
       email: data.email,
       role: data.role,
-      banned: data.banned,
+      block: data.block,
       typeAccount: data.typeAccount,
     };
   }

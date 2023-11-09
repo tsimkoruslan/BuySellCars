@@ -8,12 +8,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
 import { AuthService } from './auth.service';
 import { LoginReqDto } from './dto/request/login-req.dto';
 import { LoginResDto } from './dto/response/login-res.dto';
-import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { LogoutGuard } from './guard/logout.guard';
 
 @ApiTags('Auth')

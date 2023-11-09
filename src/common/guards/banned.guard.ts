@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class BannedGuard implements CanActivate {
+export class BlockGuard implements CanActivate {
   constructor() {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const statusBanned = request.body.banned;
-    if (statusBanned === false) {
-      throw new BadRequestException('You banned');
+    const status = request.user.block;
+    if (status === true) {
+      throw new BadRequestException('You block!');
       return false;
     }
     return true;

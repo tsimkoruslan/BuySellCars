@@ -1,13 +1,14 @@
 import { Transform } from 'class-transformer';
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { ERoleBasic } from '../../enum/role.enum';
+
+import { IsAllowedRole } from '../../../../common/decorators/role-validator.dto';
+import { ERole } from '../../../../common/enum/role.enum';
 
 export class UserCreateReqDto {
   @Transform(({ value }) => value.trim().toLowerCase())
@@ -24,8 +25,9 @@ export class UserCreateReqDto {
   email: string;
 
   @Transform(({ value }) => value.trim().toLowerCase())
-  @IsEnum(ERoleBasic)
-  role: ERoleBasic;
+  @IsString()
+  @IsAllowedRole({ message: 'Invalid role value' })
+  role: ERole;
 
   @Transform(({ value }) => value.trim())
   @IsString()
