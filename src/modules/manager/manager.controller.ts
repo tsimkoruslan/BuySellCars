@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Put, UseGuards } from "@nestjs/common";
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -11,10 +11,11 @@ import { UserListItemResponseDto } from '../user/dto/response/user-details-res.d
 import { UserController } from '../user/user.controller';
 import { ERole } from '../../common/enum/role.enum';
 import { ManagerService } from './manager.service';
+import { UserService } from "../user/user.service";
 
 @ApiBearerAuth()
 @ApiTags('Manager')
-@RoleDecorator(ERole.MANAGER)
+@RoleDecorator(ERole.MANAGER, ERole.ADMIN)
 @UseGuards(AuthGuard(), RoleGuard, BlockGuard)
 @Controller('manager')
 export class ManagerController {
@@ -22,6 +23,7 @@ export class ManagerController {
     private readonly managerService: ManagerService,
     private readonly userController: UserController,
     private readonly carController: CarController,
+    private readonly userService: UserService,
   ) {}
 
   @ApiOperation({ summary: 'Block user' })
@@ -54,11 +56,11 @@ export class ManagerController {
   async getAllCars(): Promise<CarDetailsResDto[]> {
     return await this.carController.getAllCars();
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete user by id' })
   @Delete('user/:userId')
   async deleteUserById(@Param('userId') userId: string): Promise<void> {
-    await this.userController.deleteUser(userId);
+    await this.userService.deleteUser(userId);
   }
 
   @ApiOperation({ summary: 'Get car by id' })
@@ -67,6 +69,7 @@ export class ManagerController {
     return await this.carController.getCarById(carId);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete car by Id' })
   @Delete('car/:carId')
   async deleteCarById(@Param('carId') carId: string): Promise<void> {

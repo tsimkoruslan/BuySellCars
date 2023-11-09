@@ -1,15 +1,18 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
+
+import { CarEntity } from '../../database/car.entity';
+import { UserRepository } from '../user/user.repository';
 import { CarRepository } from './car.repository';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
-import { CarDetailsResDto } from './dto/response/car-details-res.dto';
-import { UserRepository } from '../user/user.repository';
-import { EIsActive } from './enum/isActive.enum';
-import { CarEntity } from '../../database/car.entity';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
+import { CarDetailsResDto } from './dto/response/car-details-res.dto';
+import { EIsActive } from './enum/isActive.enum';
 
 @Injectable()
 export class CarService {
@@ -29,7 +32,9 @@ export class CarService {
     dto: CarCreateReqDto,
     userId: string,
   ): Promise<CarDetailsResDto> {
-    const user = await this.userRepository.findOneBy({ id: userId });
+    const user = await this.userRepository.findOneBy({
+      id: userId,
+    });
     if (!user) {
       throw new BadRequestException('User not exist');
     }
@@ -57,6 +62,7 @@ export class CarService {
   public async deleteCar(carId: string): Promise<void> {
     const entity = await this.findCarByIdOrException(carId);
     await this.carRepository.remove(entity);
+    throw new HttpException('Car delete!', HttpStatus.OK);
   }
 
   private async findCarByIdOrException(carId: string): Promise<CarEntity> {

@@ -27,18 +27,19 @@ import { UserService } from './user.service';
 @ApiBearerAuth()
 @ApiTags('Users')
 @UseGuards(AuthGuard(), RoleGuard, BlockGuard)
-@RoleDecorator(ERole.BUYER, ERole.SELLER)
+@RoleDecorator(ERole.ADMIN)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @RoleDecorator(ERole.BUYER, ERole.SELLER)
   @ApiOperation({ summary: 'Get list of users' })
   @Get()
   async getAllUsers(): Promise<UserListItemResponseDto[]> {
     const result = await this.userService.getAllUsers();
     return UserResponseMapper.toListDto(result);
   }
-
+  @RoleDecorator(ERole.BUYER, ERole.SELLER)
   @ApiOperation({ summary: 'Update user' })
   @Patch(':userId')
   async updateUser(
@@ -48,6 +49,7 @@ export class UserController {
     const result = await this.userService.updateUser(userId, body);
     return UserResponseMapper.toDetailsDto(result);
   }
+  @RoleDecorator(ERole.BUYER, ERole.SELLER)
   @ApiOperation({ summary: 'Get user by id' })
   @Get(':userId')
   async getUserById(
@@ -55,11 +57,5 @@ export class UserController {
   ): Promise<UserDetailsResDto> {
     const result = await this.userService.getUserById(userId);
     return UserResponseMapper.toDetailsDto(result);
-  }
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete user by id' })
-  @Delete(':userId')
-  async deleteUser(@Param('userId') userId: string): Promise<void> {
-    await this.userService.deleteUser(userId);
   }
 }

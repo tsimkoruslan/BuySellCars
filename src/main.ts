@@ -4,8 +4,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 
 import { AppModule } from './app.module';
+import { admin } from './common/constants/admin.dto';
 import { SwaggerHelper } from './common/helper/swagger.helper';
 import { AppConfigService } from './config/app/configuration.service';
+import { AdminService } from './modules/admin/admin.service';
 
 const environment = process.env.NODE_ENV ?? '';
 dotenv.config({ path: `environments/${environment}.env` });
@@ -27,6 +29,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerHelper.setDefaultResponses(document);
   SwaggerModule.setup('api', app, document);
+
+  const adminService = app.get<AdminService>(AdminService);
+  try {
+    await adminService.createAdmin(admin);
+  } catch (e) {
+    new Logger().error(e);
+  }
 
   app.useGlobalPipes(new ValidationPipe());
 

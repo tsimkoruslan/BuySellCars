@@ -14,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { ERole } from '../../common/enum/role.enum';
 import { BlockGuard } from '../../common/guards/banned.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { CarResponseMapper } from './car.response.mapper';
@@ -22,18 +23,18 @@ import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
 import { CarDetailsResDto } from './dto/response/car-details-res.dto';
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
-import { ERole } from "../../common/enum/role.enum";
+import { StatusAccountValidateGuard } from "../../common/guards/status-account-validate.guard";
 
 @ApiTags('Cars')
 @ApiBearerAuth()
 @UseGuards(AuthGuard(), RoleGuard, BlockGuard)
-@RoleDecorator(ERole.SELLER)
+@RoleDecorator(ERole.SELLER, ERole.ADMIN)
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
   @ApiOperation({ summary: 'Create new car' })
-  @UseGuards(BadWordsValidation)
+  @UseGuards(BadWordsValidation, StatusAccountValidateGuard)
   @Post(':userId')
   async createCar(
     @Body() body: CarCreateReqDto,
@@ -53,7 +54,7 @@ export class CarController {
     return CarResponseMapper.toDetailsListDto(result);
   }
 
-  @RoleDecorator(ERole.BUYER)
+  @RoleDecorator(ERole.BUYER, ERole.SELLER)
   @ApiOperation({
     summary: 'Get car by id / also available for the BUYER role',
   })

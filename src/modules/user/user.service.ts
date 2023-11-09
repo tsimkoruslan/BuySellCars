@@ -1,8 +1,8 @@
 import {
-  BadRequestException,
+  BadRequestException, HttpException, HttpStatus,
   Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+  UnprocessableEntityException
+} from "@nestjs/common";
 
 import { UserEntity } from '../../database/user.entity';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';
@@ -53,5 +53,6 @@ export class UserService {
   public async deleteUser(userId: string): Promise<void> {
     const entity = await this.findUserByIdOrException(userId);
     await this.userRepository.remove(entity);
+    throw new HttpException('User delete!', HttpStatus.OK);
   }
 }

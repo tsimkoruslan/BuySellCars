@@ -10,6 +10,7 @@ import { InjectRedisClient, RedisClient } from '@webeleon/nestjs-redis';
 import * as bcrypt from 'bcrypt';
 
 import { UserEntity } from '../../database/user.entity';
+import { AdminCreateReqDto } from '../admin/dto/admin-create-req.dto';
 import { UserCreateReqDto } from '../user/dto/request/user-req-create.dto';
 import { UserRepository } from '../user/user.repository';
 import { UserService } from '../user/user.service';
@@ -47,6 +48,11 @@ export class AuthService {
     }
   }
 
+  async registerManager(dto: AdminCreateReqDto): Promise<void> {
+    dto.password = await bcrypt.hash(dto.password, 7);
+    await this.userService.createUser(dto);
+    throw new HttpException('Manager register', HttpStatus.OK);
+  }
   async register(dto: UserCreateReqDto): Promise<void> {
     dto.password = await bcrypt.hash(dto.password, 7);
     await this.userService.createUser(dto);
