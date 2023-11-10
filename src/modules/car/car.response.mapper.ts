@@ -1,5 +1,8 @@
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
-import { CarDetailsCreateResDto, CarDetailsResDto } from "./dto/response/car-details-res.dto";
+import {
+  CarDetailsCreateResDto,
+  CarDetailsResDto,
+} from './dto/response/car-details-res.dto';
 
 export class CarResponseMapper {
   static toDetailsListDto(data: CarCreateReqDto[]): CarDetailsResDto[] {
@@ -34,6 +37,7 @@ export class CarResponseMapper {
       averagePriceByRegion: data.averagePriceByRegion,
       viewCount: data.viewCount,
       averagePrice: data.averagePrice,
+      priceAccordingToTheCourse: data.priceAccordingToTheCourse,
     };
   }
 }

@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { CarEntity } from '../../database/car.entity';
+import { CurrencyService } from '../currency/currency.service';
 import { UserRepository } from '../user/user.repository';
 import { CarRepository } from './car.repository';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
@@ -24,6 +25,7 @@ export class CarService {
   constructor(
     private readonly carRepository: CarRepository,
     private readonly userRepository: UserRepository,
+    private readonly currencyService: CurrencyService,
   ) {}
 
   async getAllCars(): Promise<CarDetailsResDto[]> {
@@ -44,8 +46,13 @@ export class CarService {
       car.region,
       car.brand,
     );
+    const calculation = await this.currencyService.priceAccordingToTheCourse(
+      car.price,
+      car.currency,
+    );
     car['averagePriceByRegion'] = `${averagePriceByRegion} ${car.currency}`;
     car['averagePrice'] = `${averagePrice} ${car.currency}`;
+    car['priceAccordingToTheCourse'] = calculation;
     return car;
   }
 

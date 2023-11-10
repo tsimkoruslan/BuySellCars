@@ -29,4 +29,5 @@ export class CarDetailsCreateResDto {
   viewCount?: string;
   averagePriceByRegion?: string;
   averagePrice?: string;
+  priceAccordingToTheCourse?: string;
 }
