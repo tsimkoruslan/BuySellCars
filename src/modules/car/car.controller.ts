@@ -12,18 +12,20 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { request } from 'express';
 
 import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { ERole } from '../../common/enum/role.enum';
 import { BlockGuard } from '../../common/guards/banned.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
+import { StatusAccountValidateGuard } from '../../common/guards/status-account-validate.guard';
 import { CarResponseMapper } from './car.response.mapper';
 import { CarService } from './car.service';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
-import { CarDetailsResDto } from './dto/response/car-details-res.dto';
+import { CarDetailsCreateResDto, CarDetailsResDto } from "./dto/response/car-details-res.dto";
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
-import { StatusAccountValidateGuard } from "../../common/guards/status-account-validate.guard";
+import { StatusAccountGuard } from './guard/status-accouny.guard';
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -39,7 +41,7 @@ export class CarController {
   async createCar(
     @Body() body: CarCreateReqDto,
     @Param('userId') userId: string,
-  ): Promise<CarDetailsResDto> {
+  ): Promise<CarDetailsCreateResDto> {
     const result = await this.carService.createCar(body, userId);
     return CarResponseMapper.toDetailsDto(result);
   }
@@ -56,12 +58,25 @@ export class CarController {
 
   @RoleDecorator(ERole.BUYER, ERole.SELLER)
   @ApiOperation({
-    summary: 'Get car by id / also available for the BUYER role',
+    summary: 'Get car by id',
   })
   @Get(':carId')
   async getCarById(@Param('carId') carId: string): Promise<CarDetailsResDto> {
     const result = await this.carService.getCarById(carId);
     return CarResponseMapper.toDetailsDto(result);
+  }
+
+  @RoleDecorator(ERole.BUYER, ERole.SELLER)
+  @UseGuards(StatusAccountGuard)
+  @ApiOperation({
+    summary: 'Get all the information about the car . Type account PREMIUM',
+  })
+  @Get('info/:carId')
+  async getCarByIdAllInfo(
+    @Param('carId') carId: string,
+  ): Promise<CarDetailsCreateResDto> {
+    const result = await this.carService.getCarByIdAllInfo(carId);
+    return CarResponseMapper.toAllDetailsDto(result);
   }
 
   @ApiOperation({ summary: 'Update car by id' })

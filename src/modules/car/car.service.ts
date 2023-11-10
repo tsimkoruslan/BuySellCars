@@ -11,8 +11,13 @@ import { UserRepository } from '../user/user.repository';
 import { CarRepository } from './car.repository';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
-import { CarDetailsResDto } from './dto/response/car-details-res.dto';
+import {
+  CarDetailsCreateResDto,
+  CarDetailsResDto,
+} from './dto/response/car-details-res.dto';
+import { EBrand } from './enum/brand.enum';
 import { EIsActive } from './enum/isActive.enum';
+import { EUkraineRegion } from './enum/region.enum';
 
 @Injectable()
 export class CarService {
@@ -26,8 +31,24 @@ export class CarService {
   }
 
   public async getCarById(carId: string): Promise<CarEntity> {
-    return await this.findCarByIdOrException(carId);
+    await this.incViewCountById(carId);
+    return await this.incViewCountById(carId);
   }
+  public async getCarByIdAllInfo(
+    carId: string,
+  ): Promise<CarDetailsCreateResDto> {
+    await this.incViewCountById(carId);
+    const car = await this.incViewCountById(carId);
+    const averagePrice = await this.calculateAveragePrice(car.brand);
+    const averagePriceByRegion = await this.calculateAveragePriceByRegion(
+      car.region,
+      car.brand,
+    );
+    car['averagePriceByRegion'] = `${averagePriceByRegion} ${car.currency}`;
+    car['averagePrice'] = `${averagePrice} ${car.currency}`;
+    return car;
+  }
+
   async createCar(
     dto: CarCreateReqDto,
     userId: string,
@@ -71,5 +92,78 @@ export class CarService {
       throw new UnprocessableEntityException('Car entity not found');
     }
     return car;
+  }
+
+  private async incViewCountById(carId: string): Promise<CarEntity> {
+    const car = await this.findCarByIdOrException(carId);
+    car.viewCount = await this.updateAdViews(car.viewCount);
+    return await this.carRepository.save(car);
+  }
+  private async getCarsByRegion(
+    region: EUkraineRegion,
+    brand: EBrand,
+  ): Promise<CarEntity[]> {
+    return await this.carRepository.find({ where: { region, brand } });
+  }
+
+  private async calculateAveragePriceByRegion(
+    region: EUkraineRegion,
+    brand: EBrand,
+  ): Promise<number> {
+    const cars = await this.getCarsByRegion(region, brand);
+    return cars.reduce((sum, car) => sum + car.price, 0);
+  }
+  private async calculateAveragePrice(brand: EBrand): Promise<number> {
+    const cars = await this.carRepository.findBy({ brand });
+    return cars.reduce((sum, car) => sum + car.price, 0);
+  }
+
+  private async updateAdViews(views: any): Promise<string> {
+    let adViews = {
+      total: 0,
+      daily: 0,
+      weekly: 0,
+      monthly: 0,
+      lastViewDate: null,
+    };
+    if (views !== '0') {
+      adViews = JSON.parse(views);
+    }
+
+    async function isNewPeriod(lastDate, currentDate, period) {
+      if (!(lastDate instanceof Date)) {
+        return 1;
+      }
+
+      const periodStart = new Date(
+        period === 'Date' ? lastDate.getFullYear() : lastDate.getFullYear(),
+        period === 'Date'
+          ? lastDate.getMonth()
+          : lastDate.getDate() - lastDate.getDay(),
+      );
+
+      const isSamePeriod = periodStart.getTime() === currentDate.getTime();
+      return isSamePeriod ? 0 : 1;
+    }
+
+    const currentDate = new Date();
+    adViews.total++;
+    adViews.daily += await isNewPeriod(
+      adViews.lastViewDate,
+      currentDate,
+      'Date',
+    );
+    adViews.weekly += await isNewPeriod(
+      adViews.lastViewDate,
+      currentDate,
+      'Week',
+    );
+    adViews.monthly += await isNewPeriod(
+      adViews.lastViewDate,
+      currentDate,
+      'Month',
+    );
+    adViews.lastViewDate = currentDate;
+    return JSON.stringify(adViews);
   }
 }

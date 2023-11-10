@@ -78,6 +78,7 @@ export class AuthService {
     const token = await this.generateToken({
       id: user.id,
       role: user.role,
+      typeAccount: user.typeAccount,
     });
 
     await this.redisClient.setEx(token, 50000, token);

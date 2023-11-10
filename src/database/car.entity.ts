@@ -1,14 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-
-import { CreatedUpdatedModel } from './common/created-updated.model';
-import { EModel } from '../modules/car/enum/model.enum';
-import { EBrand } from '../modules/car/enum/brand.enum';
 import { Max, Min } from 'class-validator';
-import { ECurrency } from '../modules/car/enum/currency.enum';
-import { EUkraineRegion } from '../modules/car/enum/region.enum';
-import { UserEntity } from './user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { JoinColumn } from 'typeorm/browser';
-import { EIsActive } from "../modules/car/enum/isActive.enum";
+
+import { EBrand } from '../modules/car/enum/brand.enum';
+import { ECurrency } from '../modules/car/enum/currency.enum';
+import { EIsActive } from '../modules/car/enum/isActive.enum';
+import { EModel } from '../modules/car/enum/model.enum';
+import { EUkraineRegion } from '../modules/car/enum/region.enum';
+import { CreatedUpdatedModel } from './common/created-updated.model';
+import { UserEntity } from './user.entity';
 
 @Entity('cars')
 export class CarEntity extends CreatedUpdatedModel {
@@ -38,8 +38,11 @@ export class CarEntity extends CreatedUpdatedModel {
   @Column({ enum: EUkraineRegion })
   region: EUkraineRegion;
 
-  @Column({ type: 'int', default: 0 })
-  viewCount: number;
+  @Column({
+    type: 'text',
+    default: '',
+  })
+  viewCount: string;
 
   @Column({ enum: EIsActive, default: EIsActive.EXPECTATION })
   isActive: EIsActive;
