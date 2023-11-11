@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity } from '../../database/user.entity';
 import { AuthModule } from '../auth/auth.module';
-import { CarController } from '../car/car.controller';
 import { CarModule } from '../car/car.module';
 import { CarRepository } from '../car/car.repository';
 import { CarService } from '../car/car.service';
@@ -29,7 +28,6 @@ import { ManagerService } from './manager.service';
     UserService,
     UserRepository,
     UserController,
-    CarController,
     CarService,
     CarRepository,
   ],

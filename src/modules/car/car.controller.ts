@@ -33,7 +33,6 @@ import {
 } from './dto/response/car-details-res.dto';
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
 import { StatusAccountGuard } from './guard/status-accouny.guard';
-import { S3Service } from '../s3/s3.service';
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -61,21 +60,8 @@ export class CarController {
   }
   @ApiOperation({ summary: 'Create new car' })
   @UseGuards(BadWordsValidation, StatusAccountValidateGuard)
-  // @UseInterceptors(
-  //   FileInterceptor('photo', {
-  //     storage: diskStorage({
-  //       destination: './buy-sell-car',
-  //       filename: editFileName,
-  //     }),
-  //     fileFilter: imageFileFilter,
-  //     limits: {
-  //       fileSize: photoConfig.MAX_SIZE,
-  //     },
-  //   }),
-  // )
   @Post(':userId')
   async createCar(
-    // @UploadedFile() file: Express.Multer.File,
     @Body() body: CarCreateReqDto,
     @Param('userId') userId: string,
   ): Promise<CarDetailsCreateResDto> {
@@ -93,7 +79,7 @@ export class CarController {
     return CarResponseMapper.toDetailsListDto(result);
   }
 
-  @RoleDecorator(ERole.BUYER, ERole.SELLER)
+  @RoleDecorator(ERole.BUYER, ERole.MANAGER)
   @ApiOperation({
     summary: 'Get car by id',
   })
@@ -103,7 +89,7 @@ export class CarController {
     return CarResponseMapper.toDetailsDto(result);
   }
 
-  @RoleDecorator(ERole.BUYER, ERole.SELLER)
+  @RoleDecorator(ERole.BUYER, ERole.MANAGER)
   @UseGuards(StatusAccountGuard)
   @ApiOperation({
     summary: 'Get all the information about the car . Type account PREMIUM',

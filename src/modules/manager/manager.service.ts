@@ -23,4 +23,8 @@ export class ManagerService {
     await this.userRepository.save(user);
     throw new HttpException('User unblock!', HttpStatus.OK);
   }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.userService.deleteUser(userId);
+  }
 }

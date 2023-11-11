@@ -8,6 +8,7 @@ import {
 
 import { CarEntity } from '../../database/car.entity';
 import { CurrencyService } from '../currency/currency.service';
+import { S3Service } from '../s3/s3.service';
 import { UserRepository } from '../user/user.repository';
 import { CarRepository } from './car.repository';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
@@ -25,12 +26,10 @@ export class CarService {
   constructor(
     private readonly carRepository: CarRepository,
     private readonly userRepository: UserRepository,
-    private readonly currencyService: CurrencyService,
+    private readonly currencyService: CurrencyService, // private readonly s3Service: S3Service,
   ) {}
 
-  async uploadPhoto(file, carId: string): Promise<void> {
-
-  }
+  async uploadPhoto(file, carId: string): Promise<void> {}
   async getAllCars(): Promise<CarDetailsResDto[]> {
     return await this.carRepository.find();
   }
