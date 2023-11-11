@@ -20,6 +20,7 @@ export class CarResponseMapper {
       brand: data.brand,
       isActive: data.isActive,
       description: data.description,
+      photo: data.photo,
     };
   }
 
@@ -34,8 +35,9 @@ export class CarResponseMapper {
       brand: data.brand,
       isActive: data.isActive,
       description: data.description,
-      averagePriceByRegion: data.averagePriceByRegion,
       viewCount: data.viewCount,
+      photo: data.photo,
+      averagePriceByRegion: data.averagePriceByRegion,
       averagePrice: data.averagePrice,
       priceAccordingToTheCourse: data.priceAccordingToTheCourse,
     };

@@ -34,7 +34,7 @@ async function bootstrap() {
   try {
     await adminService.createAdmin(admin);
   } catch (e) {
-    new Logger().error(e);
+    new Logger().warn('ROOT ADMIN created');
   }
 
   app.useGlobalPipes(new ValidationPipe());

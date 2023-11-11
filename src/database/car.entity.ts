@@ -44,6 +44,9 @@ export class CarEntity extends CreatedUpdatedModel {
   })
   viewCount: string;
 
+  @Column({ type: 'text' })
+  photo: string;
+
   @Column({ enum: EIsActive, default: EIsActive.EXPECTATION })
   isActive: EIsActive;
 

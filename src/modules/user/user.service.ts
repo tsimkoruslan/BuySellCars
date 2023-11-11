@@ -1,8 +1,10 @@
 import {
-  BadRequestException, HttpException, HttpStatus,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
-  UnprocessableEntityException
-} from "@nestjs/common";
+  UnprocessableEntityException,
+} from '@nestjs/common';
 
 import { UserEntity } from '../../database/user.entity';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';

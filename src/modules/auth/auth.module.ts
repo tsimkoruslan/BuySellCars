@@ -13,8 +13,6 @@ import { JwtConfigModule } from '../../config/jwt/config.module';
 import { AuthController } from './auth.controller';
 import { UserRepository } from '../user/user.repository';
 import { UserService } from '../user/user.service';
-import { AppConfigService } from '../../config/app/configuration.service';
-import { AppConfigModule } from '../../config/app/config.module';
 
 const JwtFactory = (config: JwtConfigService) => ({
   secret: config.secretKey,

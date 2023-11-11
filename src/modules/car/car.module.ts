@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { diskStorage } from 'multer';
 
+import { AWSConfigModule } from '../../config/aws/config.module';
+import { AWSConfigService } from '../../config/aws/configuration.service';
 import { CarEntity } from '../../database/car.entity';
 import { AuthModule } from '../auth/auth.module';
 import { CurrencyModule } from '../currency/currency.module';

@@ -28,6 +28,9 @@ export class CarService {
     private readonly currencyService: CurrencyService,
   ) {}
 
+  async uploadPhoto(file, carId: string): Promise<void> {
+
+  }
   async getAllCars(): Promise<CarDetailsResDto[]> {
     return await this.carRepository.find();
   }

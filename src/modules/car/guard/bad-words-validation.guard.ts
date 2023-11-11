@@ -36,6 +36,9 @@ export class BadWordsValidation implements CanActivate {
     description: string,
     badWords: string[],
   ): Promise<boolean> {
+    if (!description) {
+      throw new BadRequestException('Description empty');
+    }
     description = description.toLowerCase();
 
     for (const word of badWords) {

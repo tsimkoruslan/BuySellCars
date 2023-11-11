@@ -16,7 +16,6 @@ export class CurrencyService {
     const foundRate = await newExchangeRate.find(
       (obj) => obj.currency === currency,
     );
-    console.log(foundRate);
     if (currency === 'UAH') {
       return;
     }

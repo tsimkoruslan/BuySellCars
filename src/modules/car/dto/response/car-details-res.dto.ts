@@ -14,6 +14,7 @@ export class CarDetailsResDto {
   description: string;
   region: EUkraineRegion;
   isActive: EIsActive;
+  photo: string;
 }
 
 export class CarDetailsCreateResDto {
@@ -26,6 +27,7 @@ export class CarDetailsCreateResDto {
   description: string;
   region: EUkraineRegion;
   isActive: EIsActive;
+  photo: string;
   viewCount?: string;
   averagePriceByRegion?: string;
   averagePrice?: string;

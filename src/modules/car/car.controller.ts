@@ -8,24 +8,32 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { request } from 'express';
 
+import { photoConfig } from '../../common/constants/photo-config';
 import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { ERole } from '../../common/enum/role.enum';
 import { BlockGuard } from '../../common/guards/banned.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { StatusAccountValidateGuard } from '../../common/guards/status-account-validate.guard';
+import { imageFileFilter } from '../../common/utils/file.upload.utils';
 import { CarResponseMapper } from './car.response.mapper';
 import { CarService } from './car.service';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
 import { CarReqUpdateDto } from './dto/request/car-req-update.dto';
-import { CarDetailsCreateResDto, CarDetailsResDto } from "./dto/response/car-details-res.dto";
+import {
+  CarDetailsCreateResDto,
+  CarDetailsResDto,
+} from './dto/response/car-details-res.dto';
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
 import { StatusAccountGuard } from './guard/status-accouny.guard';
+import { S3Service } from './s3.service';
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -34,11 +42,40 @@ import { StatusAccountGuard } from './guard/status-accouny.guard';
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
-
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Upload photo car' })
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: photoConfig.MAX_SIZE,
+      },
+    }),
+  )
+  async uploadPhoto(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('carId') carId: string,
+  ) {
+    await this.carService.uploadPhoto(file, carId);
+  }
   @ApiOperation({ summary: 'Create new car' })
   @UseGuards(BadWordsValidation, StatusAccountValidateGuard)
+  // @UseInterceptors(
+  //   FileInterceptor('photo', {
+  //     storage: diskStorage({
+  //       destination: './buy-sell-car',
+  //       filename: editFileName,
+  //     }),
+  //     fileFilter: imageFileFilter,
+  //     limits: {
+  //       fileSize: photoConfig.MAX_SIZE,
+  //     },
+  //   }),
+  // )
   @Post(':userId')
   async createCar(
+    // @UploadedFile() file: Express.Multer.File,
     @Body() body: CarCreateReqDto,
     @Param('userId') userId: string,
   ): Promise<CarDetailsCreateResDto> {
