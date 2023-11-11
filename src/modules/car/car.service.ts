@@ -26,7 +26,7 @@ export class CarService {
   constructor(
     private readonly carRepository: CarRepository,
     private readonly userRepository: UserRepository,
-    private readonly currencyService: CurrencyService, // private readonly s3Service: S3Service,
+    private readonly currencyService: CurrencyService
   ) {}
 
   async uploadPhoto(file, carId: string): Promise<void> {}
