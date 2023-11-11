@@ -33,7 +33,7 @@ import {
 } from './dto/response/car-details-res.dto';
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
 import { StatusAccountGuard } from './guard/status-accouny.guard';
-import { S3Service } from './s3.service';
+import { S3Service } from '../s3/s3.service';
 
 @ApiTags('Cars')
 @ApiBearerAuth()

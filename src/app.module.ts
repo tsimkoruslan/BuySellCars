@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CarModule } from './modules/car/car.module';
 import { CurrencyModule } from './modules/currency/currency.module';
 import { ManagerModule } from './modules/manager/manager.module';
+import { S3Module } from './modules/s3/s3.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { UserModule } from './modules/user/user.module';
     ManagerModule,
     AdminModule,
     CurrencyModule,
+    S3Module,
   ],
   controllers: [],
   providers: [],
