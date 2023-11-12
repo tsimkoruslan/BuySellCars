@@ -7,4 +7,5 @@ export const admin = {
   role: ERole.ADMIN,
   password: 'admin',
   typeAccount: ETypeAccount.PREMIUM,
+  telegram: '@admin',
 };

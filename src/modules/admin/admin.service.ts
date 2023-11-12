@@ -14,4 +14,8 @@ export class AdminService {
   async createManager(dto: AdminCreateReqDto): Promise<void> {
     await this.authService.registerManager(dto);
   }
+
+  async createPartnerAdmin(dto: AdminCreateReqDto): Promise<void> {
+    await this.authService.registerPartnerAdmin(dto);
+  }
 }

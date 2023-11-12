@@ -33,6 +33,7 @@ import {
 } from './dto/response/car-details-res.dto';
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
 import { StatusAccountGuard } from './guard/status-accouny.guard';
+import { CarValidationGuard } from "./guard/brands-and-models.guard";
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -59,7 +60,7 @@ export class CarController {
     await this.carService.uploadPhoto(file, carId);
   }
   @ApiOperation({ summary: 'Create new car' })
-  @UseGuards(BadWordsValidation, StatusAccountValidateGuard)
+  @UseGuards(BadWordsValidation, StatusAccountValidateGuard, CarValidationGuard)
   @Post(':userId')
   async createCar(
     @Body() body: CarCreateReqDto,

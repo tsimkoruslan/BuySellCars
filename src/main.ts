@@ -5,9 +5,11 @@ import * as dotenv from 'dotenv';
 
 import { AppModule } from './app.module';
 import { admin } from './common/constants/admin.dto';
+import { brandsAndModels } from './common/constants/brands-and-models';
 import { SwaggerHelper } from './common/helper/swagger.helper';
 import { AppConfigService } from './config/app/configuration.service';
 import { AdminService } from './modules/admin/admin.service';
+import { ModelsService } from './modules/brand/models.service';
 
 const environment = process.env.NODE_ENV ?? '';
 dotenv.config({ path: `environments/${environment}.env` });
@@ -33,10 +35,17 @@ async function bootstrap() {
   const adminService = app.get<AdminService>(AdminService);
   try {
     await adminService.createAdmin(admin);
+    new Logger().warn('ROOT ADMIN created.');
   } catch (e) {
-    new Logger().warn('ROOT ADMIN created');
+    new Logger().warn('ROOT ADMIN created.');
   }
-
+  const brandAndModelService = app.get<ModelsService>(ModelsService);
+  try {
+    await brandAndModelService.createBrandsAndModels(brandsAndModels);
+    new Logger().warn('Brand and model created.');
+  } catch (e) {
+    new Logger().warn('Brand and model created.');
+  }
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(appConfig.port, () => {

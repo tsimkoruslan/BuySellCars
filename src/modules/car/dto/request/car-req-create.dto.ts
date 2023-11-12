@@ -2,7 +2,6 @@ import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsNumber,
-  IsOptional,
   IsString,
   Max,
   MaxLength,
@@ -10,10 +9,8 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { EBrand } from '../../enum/brand.enum';
 import { ECurrency } from '../../enum/currency.enum';
 import { EIsActive } from '../../enum/isActive.enum';
-import { EModel } from '../../enum/model.enum';
 import { EUkraineRegion } from '../../enum/region.enum';
 
 export class CarCreateReqDto {
@@ -26,8 +23,8 @@ export class CarCreateReqDto {
   price: number;
 
   @Transform(({ value }) => value.trim().toLowerCase())
-  @IsEnum(EBrand)
-  brand: EBrand;
+  // @IsEnum(EBrand)
+  brand: string;
 
   @Transform(({ value }) => value.toUpperCase())
   @IsEnum(ECurrency)
@@ -36,8 +33,8 @@ export class CarCreateReqDto {
   @Transform(({ value }) => value.trim().toLowerCase())
   @MinLength(2)
   @MaxLength(20)
-  @IsEnum(EModel)
-  model: EModel;
+  // @IsEnum(EModel)
+  model: string;
 
   @IsString()
   description: string;

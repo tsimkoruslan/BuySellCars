@@ -6,6 +6,7 @@ export class UserDetailsResDto {
   id: string;
   userName: string;
   email: string;
+  telegram: string;
   role: ERole;
   typeAccount: ETypeAccount;
   cars?: CarDetailsResDto[];
@@ -18,6 +19,7 @@ export class UserListItemResponseDto {
   id: string;
   userName: string;
   email: string;
+  telegram: string;
   role: ERole;
   typeAccount: ETypeAccount;
   block: boolean;

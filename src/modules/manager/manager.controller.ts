@@ -1,12 +1,15 @@
 import {
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
-  Param, Patch,
+  Param,
+  Patch,
+  Post,
   Put,
-  UseGuards
-} from "@nestjs/common";
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -14,6 +17,7 @@ import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { ERole } from '../../common/enum/role.enum';
 import { BlockGuard } from '../../common/guards/banned.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
+import { CarDetailsResDto } from '../car/dto/response/car-details-res.dto';
 import { ManagerService } from './manager.service';
 
 @ApiBearerAuth()
@@ -23,6 +27,22 @@ import { ManagerService } from './manager.service';
 @Controller('manager')
 export class ManagerController {
   constructor(private readonly managerService: ManagerService) {}
+
+  @ApiOperation({
+    summary: 'Get list not activate cars',
+  })
+  @Get()
+  async getNotActivateCars(): Promise<CarDetailsResDto[]> {
+    return await this.managerService.getNotActiveCars();
+  }
+  @ApiOperation({
+    summary: 'give Premium status to the user',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post(':userId')
+  async givePremium(@Param('userId') userId: string): Promise<void> {
+    await this.managerService.givePremium(userId);
+  }
 
   @ApiOperation({ summary: 'Block user' })
   @Patch(':userId')

@@ -12,7 +12,6 @@ import { UserRepository } from '../../modules/user/user.repository';
 export class StatusAccountValidateGuard implements CanActivate {
   constructor(private readonly userRepository: UserRepository) {}
 
-
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const userId = request.params.userId;

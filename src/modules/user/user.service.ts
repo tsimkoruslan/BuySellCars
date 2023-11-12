@@ -32,8 +32,10 @@ export class UserService {
     dto: UserUpdateReqDto,
   ): Promise<UserDetailsResDto> {
     const entity = await this.findUserByIdOrException(userId);
-    await this.userRepository.merge(entity, dto);
-    return await this.userRepository.save(entity);
+
+    return await this.userRepository.save(
+      await this.userRepository.merge(entity, dto),
+    );
   }
 
   public async getUserById(userId: string): Promise<UserEntity> {

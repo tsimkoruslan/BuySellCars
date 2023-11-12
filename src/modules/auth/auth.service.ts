@@ -19,6 +19,7 @@ import { LoginResDto } from './dto/response/login-res.dto';
 
 @Injectable()
 export class AuthService {
+  salt = 7;
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
@@ -49,12 +50,18 @@ export class AuthService {
   }
 
   async registerManager(dto: AdminCreateReqDto): Promise<void> {
-    dto.password = await bcrypt.hash(dto.password, 7);
+    dto.password = await bcrypt.hash(dto.password, this.salt);
     await this.userService.createUser(dto);
     throw new HttpException('Manager register', HttpStatus.OK);
   }
+
+  async registerPartnerAdmin(dto: AdminCreateReqDto): Promise<void> {
+    dto.password = await bcrypt.hash(dto.password, this.salt);
+    await this.userService.createUser(dto);
+    throw new HttpException('Partner register', HttpStatus.OK);
+  }
   async register(dto: UserCreateReqDto): Promise<void> {
-    dto.password = await bcrypt.hash(dto.password, 7);
+    dto.password = await bcrypt.hash(dto.password, this.salt);
     await this.userService.createUser(dto);
     throw new HttpException('User register go to login', HttpStatus.OK);
   }

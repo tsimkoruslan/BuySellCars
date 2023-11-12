@@ -16,6 +16,9 @@ export class UserEntity extends CreatedUpdatedModel {
   @Column({ type: 'text', unique: true })
   email: string;
 
+  @Column({ type: 'text', unique: true })
+  telegram: string;
+
   @Column({ type: 'enum', enum: ERole })
   role: ERole;
 

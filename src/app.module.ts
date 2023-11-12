@@ -10,6 +10,7 @@ import { CurrencyModule } from './modules/currency/currency.module';
 import { ManagerModule } from './modules/manager/manager.module';
 import { S3Module } from './modules/s3/s3.module';
 import { UserModule } from './modules/user/user.module';
+import { ModelsModule } from "./modules/brand/models.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserModule } from './modules/user/user.module';
     AdminModule,
     CurrencyModule,
     S3Module,
+    ModelsModule,
   ],
   controllers: [],
   providers: [],

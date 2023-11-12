@@ -25,10 +25,20 @@ export class AdminController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Create manager / All paths are also available to the admin ',
+    summary: 'Create manager',
   })
-  @Post()
+  @Post('manager')
   async createManager(@Body() body: AdminCreateReqDto): Promise<void> {
     await this.adminService.createManager(body);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary:
+      'Create admin for partner / All paths are also available to the admin and partner',
+  })
+  @Post('partner')
+  async createPartnerAdmin(@Body() body: AdminCreateReqDto): Promise<void> {
+    await this.adminService.createPartnerAdmin(body);
   }
 }

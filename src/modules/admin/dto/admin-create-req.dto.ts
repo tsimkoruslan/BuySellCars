@@ -4,12 +4,14 @@ import {
   IsEnum,
   IsNotEmpty,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
 
 import { IsAllowedRoleAdmin } from '../../../common/decorators/role-validator.dto';
 import { ERole } from '../../../common/enum/role.enum';
+import { telegramRegex } from '../../../common/regex/telegram.regex';
 import { ETypeAccount } from '../../user/enum/type-account.enum';
 
 export class AdminCreateReqDto {
@@ -25,6 +27,14 @@ export class AdminCreateReqDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @MinLength(3)
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  @Matches(telegramRegex, {
+    message: 'Invalid format.',
+  })
+  telegram: string;
 
   @Transform(({ value }) => value.trim().toLowerCase())
   @IsString()

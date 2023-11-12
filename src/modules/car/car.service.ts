@@ -17,7 +17,6 @@ import {
   CarDetailsCreateResDto,
   CarDetailsResDto,
 } from './dto/response/car-details-res.dto';
-import { EBrand } from './enum/brand.enum';
 import { EIsActive } from './enum/isActive.enum';
 import { EUkraineRegion } from './enum/region.enum';
 
@@ -26,7 +25,7 @@ export class CarService {
   constructor(
     private readonly carRepository: CarRepository,
     private readonly userRepository: UserRepository,
-    private readonly currencyService: CurrencyService
+    private readonly currencyService: CurrencyService,
   ) {}
 
   async uploadPhoto(file, carId: string): Promise<void> {}
@@ -110,19 +109,19 @@ export class CarService {
   }
   private async getCarsByRegion(
     region: EUkraineRegion,
-    brand: EBrand,
+    brand: string,
   ): Promise<CarEntity[]> {
     return await this.carRepository.find({ where: { region, brand } });
   }
 
   private async calculateAveragePriceByRegion(
     region: EUkraineRegion,
-    brand: EBrand,
+    brand: string,
   ): Promise<number> {
     const cars = await this.getCarsByRegion(region, brand);
     return cars.reduce((sum, car) => sum + car.price, 0);
   }
-  private async calculateAveragePrice(brand: EBrand): Promise<number> {
+  private async calculateAveragePrice(brand: string): Promise<number> {
     const cars = await this.carRepository.findBy({ brand });
     return cars.reduce((sum, car) => sum + car.price, 0);
   }
