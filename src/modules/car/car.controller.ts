@@ -8,21 +8,16 @@ import {
   Param,
   Post,
   Put,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { photoConfig } from '../../common/constants/photo-config';
 import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { ERole } from '../../common/enum/role.enum';
 import { BlockGuard } from '../../common/guards/banned.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { StatusAccountValidateGuard } from '../../common/guards/status-account-validate.guard';
-import { imageFileFilter } from '../../common/utils/file.upload.utils';
 import { CarResponseMapper } from './car.response.mapper';
 import { CarService } from './car.service';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
@@ -32,8 +27,8 @@ import {
   CarDetailsResDto,
 } from './dto/response/car-details-res.dto';
 import { BadWordsValidation } from './guard/bad-words-validation.guard';
+import { CarValidationGuard } from './guard/brands-and-models.guard';
 import { StatusAccountGuard } from './guard/status-accouny.guard';
-import { CarValidationGuard } from "./guard/brands-and-models.guard";
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -42,23 +37,6 @@ import { CarValidationGuard } from "./guard/brands-and-models.guard";
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Upload photo car' })
-  @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('photo', {
-      fileFilter: imageFileFilter,
-      limits: {
-        fileSize: photoConfig.MAX_SIZE,
-      },
-    }),
-  )
-  async uploadPhoto(
-    @UploadedFile() file: Express.Multer.File,
-    @Param('carId') carId: string,
-  ) {
-    await this.carService.uploadPhoto(file, carId);
-  }
   @ApiOperation({ summary: 'Create new car' })
   @UseGuards(BadWordsValidation, StatusAccountValidateGuard, CarValidationGuard)
   @Post(':userId')
