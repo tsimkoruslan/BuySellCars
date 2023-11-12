@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { UserEntity } from '../../database/user.entity';
+import { S3Service } from '../s3/s3.service';
 import { UserCreateReqDto } from './dto/request/user-req-create.dto';
 import { UserUpdateReqDto } from './dto/request/user-req-update.dto';
 import { UserDetailsResDto } from './dto/response/user-details-res.dto';
@@ -14,7 +15,10 @@ import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly s3Service: S3Service, //TODO
+  ) {}
 
   async getAllUsers(): Promise<UserDetailsResDto[]> {
     return await this.userRepository.find();

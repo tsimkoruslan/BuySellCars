@@ -26,6 +26,7 @@ export class CarService {
     private readonly carRepository: CarRepository,
     private readonly userRepository: UserRepository,
     private readonly currencyService: CurrencyService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async getAllCars(): Promise<CarDetailsResDto[]> {
@@ -91,6 +92,18 @@ export class CarService {
     const entity = await this.findCarByIdOrException(carId);
     await this.carRepository.remove(entity);
     throw new HttpException('Car delete!', HttpStatus.OK);
+  }
+
+  async writerCarPhoto(
+    file: Express.Multer.File,
+    carId: string,
+  ): Promise<void> {
+    const path = await this.s3Service.uploadFile(file, carId);
+    const urlPhoto = `https://sell-buy-car.s3.amazonaws.com/${path}`;
+    const car = await this.carRepository.findOneBy({ id: carId });
+    car.photo = urlPhoto;
+    await this.carRepository.save(car);
+    throw new HttpException('Photo car upload', HttpStatus.OK);
   }
 
   private async findCarByIdOrException(carId: string): Promise<CarEntity> {

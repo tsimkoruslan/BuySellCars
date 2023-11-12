@@ -1,18 +1,16 @@
-import { Module } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { Global, Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@webeleon/nestjs-redis';
 
-import { AuthService } from './auth.service';
-
-import { BearerStrategy } from './bearer.strategy';
-import { UserEntity } from '../../database/user.entity';
-import { JwtConfigService } from '../../config/jwt/configuration.service';
 import { JwtConfigModule } from '../../config/jwt/config.module';
+import { JwtConfigService } from '../../config/jwt/configuration.service';
+import { UserEntity } from '../../database/user.entity';
+import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
-import { UserRepository } from '../user/user.repository';
-import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
+import { BearerStrategy } from './bearer.strategy';
 
 const JwtFactory = (config: JwtConfigService) => ({
   secret: config.secretKey,
@@ -26,6 +24,7 @@ const JwtRegistrationOptions = {
   useFactory: JwtFactory,
   inject: [JwtConfigService],
 };
+@Global()
 @Module({
   imports: [
     PassportModule.register({
@@ -37,8 +36,9 @@ const JwtRegistrationOptions = {
     }),
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync(JwtRegistrationOptions),
+    UserModule,
   ],
-  providers: [AuthService, BearerStrategy, UserRepository, UserService],
+  providers: [AuthService, BearerStrategy],
   controllers: [AuthController],
   exports: [PassportModule, AuthService],
 })
