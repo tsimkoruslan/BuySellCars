@@ -4,8 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { InjectRedisClient, RedisClient } from '@webeleon/nestjs-redis';
 import { Strategy } from 'passport-http-bearer';
 
-import { AuthService } from './auth.service';
 import { UserEntity } from '../../database/user.entity';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {

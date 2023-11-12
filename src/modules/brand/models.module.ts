@@ -11,5 +11,6 @@ import { ModelsService } from './models.service';
   imports: [TypeOrmModule.forFeature([CarBrand, CarModel])],
   controllers: [],
   providers: [ModelsService, CarModelRepository, CarBrandRepository],
+  exports: [ModelsService, CarModelRepository, CarBrandRepository],
 })
 export class ModelsModule {}

@@ -8,16 +8,21 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { photoConfig } from '../../common/constants/photo-config';
 import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { ERole } from '../../common/enum/role.enum';
 import { BlockGuard } from '../../common/guards/banned.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { StatusAccountValidateGuard } from '../../common/guards/status-account-validate.guard';
+import { imageFileFilter } from '../../common/utils/file.upload.utils';
 import { CarResponseMapper } from './car.response.mapper';
 import { CarService } from './car.service';
 import { CarCreateReqDto } from './dto/request/car-req-create.dto';
@@ -89,6 +94,24 @@ export class CarController {
   ): Promise<CarDetailsResDto> {
     const result = await this.carService.updateCar(carId, body);
     return CarResponseMapper.toDetailsDto(result);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Upload photo car' })
+  @Post(':carId/image')
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: photoConfig.MAX_SIZE,
+      },
+    }),
+  )
+  async uploadPhotoCar(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('carId') carId: string,
+  ): Promise<void> {
+    await this.carService.writerCarPhoto(file, carId);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
