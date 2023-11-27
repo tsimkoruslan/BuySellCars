@@ -12,6 +12,14 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { BearerStrategy } from './bearer.strategy';
 
+const RedisConnect = {
+  url: 'redis://localhost:6379',
+};
+
+const PassportRegister = {
+  defaultStrategy: 'bearer',
+  property: 'user',
+};
 const JwtFactory = (config: JwtConfigService) => ({
   secret: config.secretKey,
   signOptions: {
@@ -24,16 +32,12 @@ const JwtRegistrationOptions = {
   useFactory: JwtFactory,
   inject: [JwtConfigService],
 };
+
 @Global()
 @Module({
   imports: [
-    PassportModule.register({
-      defaultStrategy: 'bearer',
-      property: 'user',
-    }),
-    RedisModule.forRoot({
-      url: 'redis://localhost:6379',
-    }),
+    PassportModule.register(PassportRegister),
+    RedisModule.forRoot(RedisConnect),
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync(JwtRegistrationOptions),
     UserModule,
